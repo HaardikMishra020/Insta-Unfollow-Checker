@@ -45,8 +45,12 @@ function App() {
             {result.length === 0 ? (
               <li className="mt-2 text-gray-600">No results to display.</li>
             ) : (
-              result.map((name, index) => (
-                <li key={index} className="mt-2 text-lg">{name}</li>
+              result.map((ele, index) => (
+                <li key={index} className="mt-2 my-4 text-md">{ele.name}  
+                <a className="mx-4 px-4 py-1 bg-gray-600 text-white rounded hover:bg-blue-600 transition"
+                href={ele.url}>Click here</a>
+                </li>
+                
               ))
             )}
           </ul>

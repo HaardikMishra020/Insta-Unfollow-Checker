@@ -36,10 +36,23 @@ export const processZipFile = async (zipFile) => {
   
     // Check if both files are present
     if (jsonFiles['following.json'] && jsonFiles['followers_1.json']) {
-      const list1 = jsonFiles['following.json'].relationships_following.map(item => item.string_list_data[0].value);
-      const list2 = jsonFiles['followers_1.json'].map(item => item.string_list_data[0].value);
-      // Perform the subtraction and return the result
-      return subtractLists(list1, list2);
+      const followingList = jsonFiles['following.json'].relationships_following.map(item => ({
+        name: item.string_list_data[0].value,  // Assuming this is the name
+        url: item.string_list_data[0].href     // Assuming this is the URL
+      }));
+  
+      // Map names and URLs from followers_1.json
+      const followersList = jsonFiles['followers_1.json'].map(item => ({
+        name: item.string_list_data[0].value,  // Assuming this is the name
+        url: item.string_list_data[0].href     // Assuming this is the URL
+      }));
+  
+      // Perform the subtraction and return the result (users we follow, but they don't follow back)
+      const unfollowers = followingList.filter(followingUser => {
+        return !followersList.some(follower => follower.name === followingUser.name);
+      });
+      console.log(unfollowers);
+      return unfollowers;
     } else {
       throw new Error('One or both JSON files are missing in the zip.');
     }
